@@ -1,8 +1,9 @@
 from flask import Flask
-from flask_login import LoginManager
 from app.config import Config
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
+from os import path
 
 
 
@@ -19,7 +20,9 @@ def create_app(config_class=Config):
 
     with app.app_context():
         db.init_app(app)
-        db.create_all()
+        if not path.exists(app.config['DATABASE_NAME']):
+            db.create_all()
+            print('Created Database!')
         csrf.init_app(app)
 
 
